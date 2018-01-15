@@ -47,9 +47,14 @@ def _get_comments(video_reference):
     comments = []
 
     for item in json.loads(res.text)['comments']:
+        content = unescape(item['c']).replace('<br />', '\n')
+
+        if '<a href=' in content:
+            continue
+
         comments.append({
             'author': unescape(item['n']),
-            'content': unescape(item['c']).replace('<br />', '\n'),
+            'content': content,
             'video': 'https://www.xvideos.com/video{0}/'.format(video_reference)
         })
 
