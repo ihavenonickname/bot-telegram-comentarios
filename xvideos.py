@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 from html.parser import HTMLParser
 from html import unescape
