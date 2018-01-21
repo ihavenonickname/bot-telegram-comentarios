@@ -2,7 +2,7 @@
 
 import re
 import os
-from telegram.ext import Updater, CommandHandler, MessageHandler, BaseFilter
+from telegram.ext import Updater, CommandHandler, MessageHandler, BaseFilter, run_async
 from xvideos import choose_random_porn_comment
 from datetime import datetime
 
@@ -17,6 +17,7 @@ def comment_to_str(comment):
         comment['title']
     )
 
+@run_async
 def comentario(bot, update):
     def send(message):
         bot.send_message(chat_id=update.message.chat_id, text=message)
