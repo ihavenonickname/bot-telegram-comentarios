@@ -24,7 +24,7 @@ async def comentario():
         comment = choose_random_porn_comment()
         await bot.say(format_comment(*comment))
     except Exception:
-        bot.say('Houve um erro! Entre em contato com @GabrielBlank via Telegram')
+        bot.say('Houve um erro! fala com o dev dessa caralha.')
 
 
 bot.run('TOKEN')
