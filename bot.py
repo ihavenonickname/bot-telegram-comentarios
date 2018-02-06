@@ -13,7 +13,7 @@ def format_comment(author, content, title):
 @bot.event
 async def on_ready():
     print("Bot online!")
-    await bot.change_presence(game=discord.Game(name='Vontade de morrer do caralho!'))
+    await bot.change_presence(game=discord.Game(name='!comentario'))
 
 
 @bot.command(description='Procura um comentário no xvideos.')
