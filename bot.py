@@ -1,7 +1,9 @@
 import discord
+import os
 from discord.ext import commands
 from xvideos import choose_random_porn_comment
 
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = commands.Bot(command_prefix='!')
 
@@ -27,4 +29,4 @@ async def comentario():
         bot.say('Houve uma falha no broadcast divino.')
 
 
-bot.run('TOKEN')
+bot.run(BOT_TOKEN)
