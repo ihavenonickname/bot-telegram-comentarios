@@ -30,7 +30,7 @@ async def recadinho():
 
 @bot.command(description='Procura um comentário no xvideos.')
 async def telemensagem():
-    await bot.say('**Psicografando audio...\n**')
+    await bot.say('Psicografando audio...')
 
     try:
         comment = choose_random_porn_comment()
