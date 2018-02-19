@@ -8,6 +8,11 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = commands.Bot(command_prefix='!')
 
 def format_comment(author, content, title):
+    mask = '**O {0}  comentou o seguinte:**\n`{1}`\n\n**vi isso no video:**\n`{2}`'
+    return mask.format(author, content, title)
+
+
+def format_audio(author, content, title):
     mask = '**O {0}  comentou o seguinte:**\n`{1}`\n'
     return mask.format(author, content, title)
 
@@ -34,7 +39,7 @@ async def telemensagem():
 
     try:
         comment = choose_random_porn_comment()
-        await bot.say(format_comment(*comment), tts=True)
+        await bot.say(format_audio(*comment), tts=True)
     except Exception:
         bot.say('Houve uma falha no broadcast divino.')
 
