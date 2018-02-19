@@ -8,7 +8,7 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 bot = commands.Bot(command_prefix='!')
 
 def format_comment(author, content, title):
-    mask = '**O {0}  comentou o seguinte:**\n`{1}`\n'
+    mask = '**O {0}  comentou o seguinte:**\n`{1}`\n\n**vi isso no video:**\n`{2}`'
     return mask.format(author, content, title)
 def format_tts(author, content, title):
     mask = '`{1}`'
