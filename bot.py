@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import re
 from telegram.ext import Updater, CommandHandler, run_async
 from xvideos import choose_random_porn_comment, XvideosException
 
@@ -21,7 +22,26 @@ def comentario(bot, update):
 
 @run_async
 def comment(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
+    def send(message):
+        bot.send_message(chat_id=update.message.chat_id, text=message)
+
+    match = re.match(r'^\/comment\s(([a-z]+\s)*[a-z]+)$', update.message.text[9:])
+
+    if not match:
+        send('send "/comment" followed by a search term. Example:\n\n/comment big dick')
+        return
+
+    send('Searching... Hang on!')
+
+    search_term = match.group(1).replace(' ', '+')
+
+    try:
+        author, content, title = choose_random_porn_comment(search_term)
+        send(f'Comment by {author}:\n{content}\n\nI saw it in the video:\n{title}')
+    except XvideosException as ex:
+        send(f'There was an error!\n\n{ex}')
+    except Exception:
+        send('There was an error! Contact @GabrielBlank on Telegram')
 
 def start(bot, update):
     update.message.reply_text(text='Ola!\n\nEscreva /comentario para eu te mostrar algum comentario do meu site favorito!')
