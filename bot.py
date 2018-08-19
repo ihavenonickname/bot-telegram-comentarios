@@ -2,12 +2,7 @@
 
 import os
 from telegram.ext import Updater, CommandHandler, run_async
-from xvideos import choose_random_porn_comment
-
-def format_comment(author, content, title):
-    mask = '{0} comentou o seguinte:\n{1}\n\nVi isso no video:\n{2}'
-
-    return mask.format(author, content, title)
+from xvideos import choose_random_porn_comment, XvideosException
 
 @run_async
 def comentario(bot, update):
@@ -17,10 +12,16 @@ def comentario(bot, update):
     send('Vou procurar um comentario aqui, perae...')
 
     try:
-        comment = choose_random_porn_comment()
-        send(format_comment(*comment))
+        author, content, title = choose_random_porn_comment()
+        send(f'{author} comentou o seguinte:\n{content}\n\nVi isso no video:\n{title}')
+    except XvideosException as ex:
+        send(f'Erro!\n\n{ex}')
     except Exception:
-        send('Houve um erro! Entre em contato com @GabrielBlank via Telegram')
+        send('Houve um erro! Entre em contato com @GabrielBlank no Telegram')
+
+@run_async
+def comment(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text=update.message.text)
 
 def start(bot, update):
     update.message.reply_text(text='Ola!\n\nEscreva /comentario para eu te mostrar algum comentario do meu site favorito!')
@@ -31,6 +32,7 @@ def main():
 
     dispatcher.add_handler(CommandHandler('comentario', comentario))
     dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('comment', comment))
 
     updater.start_polling()
 
