@@ -25,7 +25,7 @@ def comment(bot, update):
     def send(message):
         bot.send_message(chat_id=update.message.chat_id, text=message)
 
-    match = re.match(r'^\/comment\s(([a-z]+\s)*[a-z]+)$', update.message.text)
+    match = re.match(r'^\/comment\s(([a-z]+\s)*[a-z]+)$', update.message.text, re.IGNORECASE)
 
     if not match:
         send('send "/comment" followed by a search term. Example:\n\n/comment big dick')
