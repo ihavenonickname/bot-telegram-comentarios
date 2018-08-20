@@ -2,11 +2,21 @@
 
 import os
 import re
+import logging
 from telegram.ext import Updater, CommandHandler, run_async
 from xvideos import choose_random_porn_comment, XvideosException
 
+def log_username(update):
+    try:
+        username = update['message']['chat']['username']
+        logging.info(f'@{username}')
+    except KeyError:
+        logging.warning('Could not read username')
+
 @run_async
 def comentario(bot, update):
+    log_username(update)
+
     def send(message):
         bot.send_message(chat_id=update.message.chat_id, text=message)
 
@@ -17,11 +27,15 @@ def comentario(bot, update):
         send(f'{author} comentou o seguinte:\n{content}\n\nVi isso no video:\n{title}')
     except XvideosException as ex:
         send(f'Erro!\n\n{ex}')
-    except Exception:
+        logging.error(f'{ex}')
+    except Exception as ex:
+        logging.error(f'{ex}')
         send('Houve um erro! Entre em contato com @GabrielBlank no Telegram')
 
 @run_async
 def comment(bot, update):
+    log_username(update)
+
     def send(message):
         bot.send_message(chat_id=update.message.chat_id, text=message)
 
@@ -39,28 +53,40 @@ def comment(bot, update):
         author, content, title = choose_random_porn_comment(search_term)
         send(f'Comment by {author}:\n{content}\n\nI saw it in the video:\n{title}')
     except XvideosException as ex:
+        logging.error(f'{ex}')
         send(f'There was an error!\n\n{ex}')
-    except Exception:
+    except Exception as ex:
+        logging.error(f'{ex}')
         send('There was an error! Contact @GabrielBlank on Telegram')
 
 def start(bot, update):
+    log_username(update)
     update.message.reply_text(text='Ola!\n\nEscreva /comentario para eu te mostrar algum comentario do meu site favorito!')
 
 def main():
-    updater = Updater(os.environ['BOT_TELEGRAM_XVIDEOS_TOKEN'])
-    dispatcher = updater.dispatcher
+    logging.basicConfig(
+        filename='/var/log/bot-telegram-xvideos.log',
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s: %(message)s',
+        datefmt='%m-%d-%Y %H:%M:%S')
 
-    dispatcher.add_handler(CommandHandler('comentario', comentario))
-    dispatcher.add_handler(CommandHandler('start', start))
-    dispatcher.add_handler(CommandHandler('comment', comment))
+    try:
+        updater = Updater(os.environ['BOT_TELEGRAM_XVIDEOS_TOKEN'])
+        dispatcher = updater.dispatcher
 
-    updater.start_polling()
+        dispatcher.add_handler(CommandHandler('comentario', comentario))
+        dispatcher.add_handler(CommandHandler('start', start))
+        dispatcher.add_handler(CommandHandler('comment', comment))
 
-    print('Running!')
+        updater.start_polling()
 
-    updater.idle()
+        print('Running!')
 
-    print()
+        updater.idle()
+
+        print()
+    except Exception as ex:
+        logging.critical(f'{ex}')
 
 if __name__ == '__main__':
     main()
