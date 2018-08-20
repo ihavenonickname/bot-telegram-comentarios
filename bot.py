@@ -8,8 +8,12 @@ from xvideos import choose_random_porn_comment, XvideosException
 
 def log_username(update):
     try:
-        username = update['message']['chat']['username']
-        logging.info(f'@{username}')
+        username = update.effective_user.username
+        if update['message']['chat']['type'] == 'group':
+            group = update['message']['chat']['title']
+            logging.info(f'@{username} {group}')
+        else:
+            logging.info(f'@{username}')
     except KeyError:
         logging.warning('Could not read username')
 
