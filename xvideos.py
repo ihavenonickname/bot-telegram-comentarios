@@ -19,7 +19,7 @@ def _fetch_page(page_number):
     return BeautifulSoup(res.text, 'html.parser')
 
 def _find_videos(soup):
-    for element in soup.select('.thumb-block > p > a'):
+    for element in soup.select('.thumb-block > .thumb-under > p > a'):
         try:
             reference = PATTERN.match(element['href']).group(1)
         except AttributeError:
