@@ -10,12 +10,9 @@ bot = commands.Bot(command_prefix='!')
 def format_comment(author, content, title):
     mask = '**O {0}  comentou o seguinte:**\n`{1}`\n\n**vi isso no video:**\n`{2}`'
     return mask.format(author, content, title)
-
-
-def format_audio(author, content, title):
-    mask = '**O {0}  comentou o seguinte:**\n`{1}`\n'
+def format_tts(author, content, title):
+    mask = '`{1}`'
     return mask.format(author, content, title)
-
 
 @bot.event
 async def on_ready():
@@ -35,11 +32,11 @@ async def recadinho():
 
 @bot.command(description='Procura um comentário no xvideos.')
 async def telemensagem():
-    await bot.say('**Psicografando audio...\n**')
+    await bot.say('Psicografando audio...')
 
     try:
         comment = choose_random_porn_comment()
-        await bot.say(format_audio(*comment), tts=True)
+        await bot.say(format_tts(*comment), tts=True)
     except Exception:
         bot.say('Houve uma falha no broadcast divino.')
 

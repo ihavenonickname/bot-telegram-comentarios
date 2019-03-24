@@ -19,7 +19,7 @@ def _fetch_page(page_number):
     return BeautifulSoup(res.text, 'html.parser')
 
 def _find_videos(soup):
-    for element in soup.select('.thumb-block > p > a'):
+    for element in soup.select('.thumb-block > .thumb-under > p > a'):
         try:
             reference = PATTERN.match(element['href']).group(1)
         except AttributeError:
@@ -28,19 +28,25 @@ def _find_videos(soup):
         yield element['title'], reference
 
 def _get_comments(video_ref):
-    url_mask = 'https://www.xvideos.com/video-get-comments/{0}/0/'
+    url_mask = 'https://www.xvideos.com/threads/video-comments/get-posts/top/{0}/0/0'
     url = url_mask.format(video_ref)
     res = requests.post(url)
 
     if res.status_code != 200:
         raise Exception('Response Error: ' + str(res.status_code))
 
-    for item in json.loads(res.text)['comments']:
-        content = unescape(item['c']).replace('<br />', '\n')
-        author = unescape(item['n'])
+    json_obj = json.loads(res.text)['posts']
 
-        if '<a href=' not in content:
-            yield author, content
+    json_obj = json_obj['posts']
+
+    try:
+        for attr, val in json_obj.items():
+            content = val['message']
+            author = val['name']
+            if '<a href=' not in content:
+                yield author, content
+    except (AttributeError, IndexError) as e:
+        raise IndexError
 
 def choose_random_porn_comment():
     for _ in range(10):
@@ -65,4 +71,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
