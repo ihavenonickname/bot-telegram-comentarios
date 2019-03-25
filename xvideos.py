@@ -93,8 +93,8 @@ def main():
     # comment = choose_random_porn_comment()
     # print(*comment, sep='\n')
 
-    # video = choose_random_video()
-    # print(video, sep='\n')
+    video = choose_random_video()
+    print(video, sep='\n')
 
 if __name__ == '__main__':
     main()
