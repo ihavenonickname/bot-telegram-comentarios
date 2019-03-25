@@ -63,7 +63,7 @@ def choose_random_porn_comment():
 
     raise Exception('Too hard')
 
-def _fetch_tag_page(page_number, tag):
+def _fetch_tag_page(page_number, *tag):
     if tag:
         url = 'https://www.xvideos.com/?k='+ str(tag) +'&p=' + str(page_number)
     else:
