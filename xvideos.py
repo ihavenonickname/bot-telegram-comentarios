@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from html import unescape
+import html
 import re
 import random
 import json
@@ -25,7 +25,7 @@ def _find_videos(soup):
         except AttributeError:
             pass
 
-        yield element['title'], reference
+        yield element['title'], reference, element['href']
 
 def _get_comments(video_ref):
     url_mask = 'https://www.xvideos.com/threads/video-comments/get-posts/top/{0}/0/0'
@@ -36,13 +36,12 @@ def _get_comments(video_ref):
         raise Exception('Response Error: ' + str(res.status_code))
 
     json_obj = json.loads(res.text)['posts']
-
     json_obj = json_obj['posts']
 
     try:
         for attr, val in json_obj.items():
-            content = val['message']
-            author = val['name']
+            content = html.unescape(val['message'])
+            author = html.unescape(val['name'])
             if '<a href=' not in content:
                 yield author, content
     except (AttributeError, IndexError) as e:
@@ -52,10 +51,10 @@ def choose_random_porn_comment():
     for _ in range(10):
         page = _fetch_page(random.randint(1, 40))
         videos = _find_videos(page)
-        title, reference = random.choice(list(videos))
-        comments = _get_comments(reference)
 
         try:
+            title, reference, url = random.choice(list(videos))
+            comments = _get_comments(reference)
             author, content = random.choice(list(comments))
         except IndexError:
             continue
@@ -64,10 +63,38 @@ def choose_random_porn_comment():
 
     raise Exception('Too hard')
 
-def main():
-    comment = choose_random_porn_comment()
+def _fetch_tag_page(page_number, tag):
+    if tag:
+        url = 'https://www.xvideos.com/?k='+ str(tag) +'&p=' + str(page_number)
+    else:
+        url = 'https://www.xvideos.com/new/' + str(page_number)
 
-    print(*comment, sep='\n')
+    res = requests.get(url)
+    if res.status_code != 200:
+        raise Exception('Response Error: ' + str(res.status_code))
+
+    return BeautifulSoup(res.text, 'html.parser')
+
+def choose_random_video(*tag):
+    for _ in range(10):
+        page = _fetch_tag_page(random.randint(1, 4), tag)
+        videos = _find_videos(page)
+
+        try:
+            title, reference, url = random.choice(list(videos))
+            url = 'https://xvideos.com'+url
+            return url
+        except IndexError:
+            raise Exception('Response Error: Bad search term')
+
+    raise Exception('Too hard')
+
+def main():
+    # comment = choose_random_porn_comment()
+    # print(*comment, sep='\n')
+
+    video = choose_random_video()
+    print(video, sep='\n')
 
 if __name__ == '__main__':
     main()
