@@ -48,9 +48,7 @@ async def telemensagem():
 @bot.command(description='Procura um video baseado na tag passada.', pass_context=True)
 async def busca(ctx, tag=None):
     print(ctx.message.author)
-    print(ctx.message)
-    print(ctx.author)
-    print(tag)
+    # print(tag)
     try:
         link = choose_random_video(tag)
         # await bot.say('Segura esse link aí: ' + link)
