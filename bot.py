@@ -46,13 +46,11 @@ async def telemensagem():
 
 
 @bot.command(description='Procura um video baseado na tag passada.', pass_context=True)
-async def busca(ctx, *tag):
-    print(ctx)
-    print(tag)
-    await bot.say('Buscando...')
+async def busca(ctx, tag=None):
     try:
         link = choose_random_video(tag)
-        await bot.say('Segura esse link aí: ' + link)
+        # await bot.say('Segura esse link aí: ' + link)
+        await ctx.author.send('Segura esse link aí: ' + link)
     except Exception:
         bot.say('Houve uma falha na busca. Tente novamente.')
 
