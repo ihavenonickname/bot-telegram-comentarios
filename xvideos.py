@@ -63,19 +63,20 @@ def choose_random_porn_comment():
 
     raise Exception('Too hard')
 
-def _fetch_tag_page(page_number, *tag):
-    if tag is None:
-        url = 'https://www.xvideos.com/new/' + str(page_number)
-    else:
+def _fetch_tag_page(page_number, tag):
+    if tag is not None:
         url = 'https://www.xvideos.com/?k='+ str(tag) +'&p=' + str(page_number)
+    else:
+        url = 'https://www.xvideos.com/new/' + str(page_number)
 
+    print(url)
     res = requests.get(url)
     if res.status_code != 200:
         raise Exception('Response Error: ' + str(res.status_code))
 
     return BeautifulSoup(res.text, 'html.parser')
 
-def choose_random_video(*tag):
+def choose_random_video(tag=None):
     for _ in range(10):
         page = _fetch_tag_page(random.randint(1, 4), tag)
         videos = _find_videos(page)
