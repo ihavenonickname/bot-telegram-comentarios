@@ -50,7 +50,8 @@ async def busca(ctx, tag=None):
     try:
         link = choose_random_video(tag)
         # await bot.say('Segura esse link aí: ' + link)
-        await ctx.author.send('Segura esse link aí: ' + link)
+        print(ctx.author)
+        await ctx.author.send(str('Segura esse link aí: ' + link))
     except Exception:
         bot.say('Houve uma falha na busca. Tente novamente.')
 
