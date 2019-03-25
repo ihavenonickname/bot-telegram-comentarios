@@ -69,7 +69,6 @@ def _fetch_tag_page(page_number, tag):
     else:
         url = 'https://www.xvideos.com/new/' + str(page_number)
 
-    print(url)
     res = requests.get(url)
     if res.status_code != 200:
         raise Exception('Response Error: ' + str(res.status_code))
@@ -94,8 +93,8 @@ def main():
     # comment = choose_random_porn_comment()
     # print(*comment, sep='\n')
 
-    video = choose_random_video()
-    print(video, sep='\n')
+    # video = choose_random_video()
+    # print(video, sep='\n')
 
 if __name__ == '__main__':
     main()
