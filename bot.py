@@ -46,7 +46,8 @@ async def telemensagem():
 
 
 @bot.command(description='Procura um video baseado na tag passada.')
-async def busca(*tag):
+async def busca(ctx, *tag):
+    print(ctx)
     print(tag)
     await bot.say('Buscando...')
     try:

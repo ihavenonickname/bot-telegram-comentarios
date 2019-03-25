@@ -64,10 +64,10 @@ def choose_random_porn_comment():
     raise Exception('Too hard')
 
 def _fetch_tag_page(page_number, *tag):
-    if tag:
-        url = 'https://www.xvideos.com/?k='+ str(tag) +'&p=' + str(page_number)
-    else:
+    if tag is None:
         url = 'https://www.xvideos.com/new/' + str(page_number)
+    else:
+        url = 'https://www.xvideos.com/?k='+ str(tag) +'&p=' + str(page_number)
 
     res = requests.get(url)
     if res.status_code != 200:
