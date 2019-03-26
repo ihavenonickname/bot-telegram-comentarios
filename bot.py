@@ -19,8 +19,7 @@ async def on_ready():
 @bot.command(description='Apresenta a lista de ajuda ao usuário.', pass_context=True)
 async def meajuda(ctx):
     # await bot.say('*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se nao passado nenhum, é retornado um video aleatório\n')
-    print(ctx.author)
-    await bot.send_message(ctx.author, '*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se nao passado nenhum, é retornado um video aleatório\n')
+    await bot.send_message(ctx.message.author, '*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se nao passado nenhum, é retornado um video aleatório\n')
 
 
 @bot.command(description='Procura um comentário no xvideos.')
