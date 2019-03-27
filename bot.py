@@ -18,8 +18,9 @@ async def on_ready():
 
 @bot.command(description='Apresenta a lista de ajuda ao usuário.', pass_context=True)
 async def meajuda(ctx):
-    # await bot.say('*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se nao passado nenhum, é retornado um video aleatório\n')
-    await bot.send_message(ctx.message.author, '*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se nao passado nenhum, é retornado um video aleatório\n')
+    await bot.send_message(ctx.message.author, '*Olá. Aqui estão os comandos:*\n - `!mensagem` - Procura um comentario aleatório no Xvideos em Portugês\n - `!telemensagem` - Procura um comentario aleatório no Xvideos em Portugês e o envia com TTS (Text to Speech)\n - `!busca *termo*` - Procura um video pelo termo passado, se não passado nenhum, é retornado um video aleatório\n - `!meajuda` - Mostra esta mensagem.\n\n Encontrou algum problema ou tem alguma sugestão para o bot? Sinta-se livre para nos enviar uma mensagem por este link https://github.com/marquesgabriel/bot-discord-comentarios-xvideos/issues\n')
+
+    await bot.delete_message(ctx.message)
 
 
 @bot.command(description='Procura um comentário no xvideos.')
@@ -31,6 +32,7 @@ async def mensagem():
     except Exception:
         bot.say('Houve uma falha na busca. Tente novamente.')
 
+    await bot.delete_message(ctx.message)
 
 @bot.command(description='Procura um comentário no xvideos. COM TTS.')
 async def telemensagem():
@@ -45,6 +47,8 @@ async def telemensagem():
     except Exception:
         bot.say('Houve uma falha na busca. Tente novamente.')
 
+    await bot.delete_message(ctx.message)
+
 
 @bot.command(description='Procura um video baseado na tag passada.', pass_context=True)
 async def busca(ctx, tag=None):
@@ -53,6 +57,8 @@ async def busca(ctx, tag=None):
         await bot.send_message(ctx.message.author, 'Segura esse link aí meu parceiro: ' + link)
     except Exception:
         bot.say('Houve uma falha na busca. Tente novamente.')
+
+    await bot.delete_message(ctx.message)
 
 
 bot.run(BOT_TOKEN)
