@@ -15,7 +15,7 @@ Agora também é possível fazer uma busca por vídeos aleatórios com/sem palav
 
 ### Como utilizar
 
-Adicione o bot no seu servidor através do link [https://discordapp.com/api/oauth2/authorize?client_id=410732201785688064&permissions=0&scope=bot](https://discordapp.com/api/oauth2/authorize?client_id=410732201785688064&permissions=0&scope=bot)
+Adicione o bot no seu servidor através do link [https://discordapp.com/api/oauth2/authorize?client_id=410732201785688064&permissions=0&scope=bot](https://discordapp.com/api/oauth2/authorize?client_id=410732201785688064&permissions=63488&scope=bot)
 
 Divirta-se.
 
