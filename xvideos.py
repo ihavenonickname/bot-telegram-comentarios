@@ -31,18 +31,26 @@ def _find_videos(soup):
 
 def _get_comments(video_ref):
     url_mask = 'https://www.xvideos.com/video-get-comments/{0}/0/'
+    url_mask = 'https://www.xvideos.com/threads/video-comments/get-posts/top/{0}/0/0'
     url = url_mask.format(video_ref)
     res = requests.post(url)
 
     if res.status_code != 200:
         raise Exception('Response Error: ' + str(res.status_code))
 
-    for item in json.loads(res.text)['comments']:
-        content = unescape(item['c']).replace('<br />', '\n')
-        author = unescape(item['n'])
+    comments = json.loads(res.text)['posts']['posts'].values()
+    for comment in comments:
+        author = unescape(comment['name'])
+        content = unescape(comment['message'])
 
-        if '<a href=' not in content:
-            yield author, content
+        datediff = comment['time_diff']
+
+        if comment['country_name']:
+            country = comment['country_name'].strip()
+        else:
+            country = ''
+
+        yield author, content, country, datediff
 
 def choose_random_porn_comment(search_term=None):
     for _ in range(5):
@@ -64,19 +72,18 @@ def choose_random_porn_comment(search_term=None):
         comments = _get_comments(reference)
 
         try:
-            author, content = random.choice(list(comments))
+            author, content, country, datediff = random.choice(list(comments))
         except IndexError:
             continue
 
-        return author, content, title
+        return author, content, country, datediff, title
 
     raise XvideosException('No comment found')
 
 def main():
-    for _ in range(5):
-        comment = choose_random_porn_comment('creampie')
-        print(*comment, sep='\n')
-        print()
+    comment = choose_random_porn_comment('creampie')
+    print(*comment, sep='\n')
+    print()
 
 if __name__ == '__main__':
     main()

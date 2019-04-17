@@ -34,8 +34,16 @@ def comment(bot, update):
     send('Searching... Hang on!')
 
     try:
-        author, content, title = choose_random_porn_comment(search_term)
-        send(f'Comment by {author}:\n{content}\n\nI found this in the video:\n{title}')
+        author, content, country, datediff, title = choose_random_porn_comment(search_term)
+
+        if country:
+            message = f'{author} from {country}'
+        else:
+            message = f'{author}'
+
+        message += f'commented {datediff}:\n{content}\n\nI found this in the video:\n{title}'
+
+        send(message)
     except XvideosException as ex:
         logging.error(f'{ex}')
         send(f'There was an error!\n\n{ex}')
