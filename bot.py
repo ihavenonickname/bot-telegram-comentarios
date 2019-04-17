@@ -41,7 +41,7 @@ def comment(bot, update):
         else:
             message = f'{author}'
 
-        message += f'commented {datediff}:\n{content}\n\nI found this in the video:\n{title}'
+        message += f' commented {datediff}:\n{content}\n\nI found this in the video:\n{title}'
 
         send(message)
     except XvideosException as ex:
