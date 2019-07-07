@@ -1,16 +1,21 @@
 #!/usr/bin/python3
 
-from html import unescape
 import re
 import random
 import json
+from html import unescape
+from collections import namedtuple
+
 import requests
 from bs4 import BeautifulSoup
 
 class XvideosException(Exception):
     pass
 
+Comment = namedtuple('Comment', ['author', 'content', 'datediff', 'country', 'score'])
+
 PATTERN = re.compile(r'/video(\d+)/.*')
+N_ATTEMPTS = 5
 
 def _fetch_page(url):
     res = requests.get(url)
@@ -21,13 +26,17 @@ def _fetch_page(url):
     return BeautifulSoup(res.text, 'html.parser')
 
 def _find_videos(soup):
+    result = []
+
     for element in soup.select('.thumb-block > div > p > a'):
         try:
             reference = PATTERN.match(element['href']).group(1)
         except AttributeError:
             pass
 
-        yield element['title'], reference
+        result.append(reference)
+
+    return result
 
 def _get_comments(video_ref):
     url_mask = 'https://www.xvideos.com/video-get-comments/{0}/0/'
@@ -38,51 +47,65 @@ def _get_comments(video_ref):
     if res.status_code != 200:
         raise Exception('Response Error: ' + str(res.status_code))
 
-    comments = json.loads(res.text)['posts']['posts'].values()
-    for comment in comments:
-        author = unescape(comment['name'])
-        content = unescape(comment['message'])
+    posts = json.loads(res.text)['posts']
 
-        datediff = comment['time_diff']
+    if posts['nb_posts_total'] < 1:
+        return
 
-        if comment['country_name']:
-            country = comment['country_name'].strip()
-        else:
-            country = ''
+    def get_safe(prop):
+        x = item.get(prop, '')
+        return unescape(x) if x and isinstance(x, str) else None
 
-        yield author, content, country, datediff
+    result = []
+
+    for item in posts['posts'].values():
+        try:
+            score = item['votes']['nb'] - item['votes']['nbb']
+        except (KeyError, TypeError):
+            score = 0
+
+        comment = Comment(
+            get_safe('name') or 'Unknown user',
+            get_safe('message'),
+            get_safe('time_diff') or 'some time ago',
+            get_safe('country_name') or 'unknown region',
+            score
+        )
+
+        result.append(comment)
+
+    return result
 
 def choose_random_porn_comment(search_term=None):
-    for _ in range(5):
+    for _ in range(N_ATTEMPTS):
         r = random.randint(1, 10)
 
         if search_term:
            url = f'https://www.xvideos.com/?k={search_term}&p={r}'
         else:
-            url = f'https://www.xvideos.com/porn/portugues/{r}'
+            url = f'https://www.xvideos.com/'
 
         page = _fetch_page(url)
-        videos = _find_videos(page)
+        references = _find_videos(page)
 
-        try:
-            title, reference = random.choice(list(videos))
-        except IndexError:
-            raise XvideosException('No video found')
+        if not references:
+            msg = 'No videos were found'
+            if search_term:
+                msg += f' with search term "{search_term}"'
+            raise XvideosException(msg + '. :(')
 
-        comments = _get_comments(reference)
+        comments = _get_comments(random.choice(references))
 
-        try:
-            author, content, country, datediff = random.choice(list(comments))
-        except IndexError:
+        if not comments:
             continue
 
-        return author, content, country, datediff, title
+        return random.choice(comments)
 
-    raise XvideosException('No comment found')
+    raise XvideosException(f'No comments were found after {N_ATTEMPTS} attempts. :(')
 
 def main():
-    comment = choose_random_porn_comment('creampie')
-    print(*comment, sep='\n')
+    comment = choose_random_porn_comment()
+    print(comment)
     print()
 
 if __name__ == '__main__':
