@@ -59,7 +59,7 @@ def choose_random_porn_comment():
         except IndexError:
             continue
 
-        return author, content, title
+        return author, content, title, url
 
     raise Exception('Too hard')
 
