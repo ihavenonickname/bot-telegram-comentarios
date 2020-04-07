@@ -38,9 +38,9 @@ async def mensagem():
 async def telemensagem():
     await bot.say('Buscando...')
     try:
-        author, comment, title = choose_random_porn_comment()
+        author, comment, title, url = choose_random_porn_comment()
         author = '**O '+author+'  comentou o seguinte:**\n'
-        title = '**vi isso no video:**\n`'+title+'`'
+        title = '**vi isso no video:**\n`['+ title +'](' + url + ')`'
         await bot.say(author)
         await bot.say(comment, tts=True)
         await bot.say(title)
